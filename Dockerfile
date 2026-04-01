@@ -1,12 +1,9 @@
-FROM python:3.12-slim
+FROM python:3.12
 
 WORKDIR /app
 
-# Install system dependencies required for TA-Lib C Library
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+# The full python image already has build-essential but just in case:
+RUN apt-get update && apt-get install -y wget build-essential && rm -rf /var/lib/apt/lists/*
 
 # Install TA-Lib C library
 RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
@@ -18,25 +15,19 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
     cd .. && \
     rm -rf ta-lib-0.4.0-src.tar.gz ta-lib/
 
-# Copy all files
 COPY . .
 
-# Set environment variables for TA-Lib compilation
+# Force pip to use numpy 1.26.4 in ALL isolated build environments to match requirements
+# This prevents the TA-Lib python wrapper from compiling against numpy 2.x and crashing
+RUN echo "numpy==1.26.4" > /tmp/constraints.txt
+ENV PIP_CONSTRAINT=/tmp/constraints.txt
 ENV TA_LIBRARY_PATH=/usr/lib
 ENV TA_INCLUDE_PATH=/usr/include
 
-# Pre-Install build dependencies
-RUN pip install --no-cache-dir "numpy<2" setuptools wheel Cython
-
-# Explicitly install TA-Lib without build isolation to use the global numpy headers
-RUN pip install --no-cache-dir --no-build-isolation TA-Lib==0.4.28
-
-# Install remaining Python requirements
+# Install requirements seamlessly
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install flask flask-cors
+RUN pip install --no-cache-dir flask flask-cors
 
-# Expose Web Dashboard Port
 EXPOSE 5000
 
-# Start Bot in Web Mode
 CMD ["python", "main.py", "--mode", "web"]
