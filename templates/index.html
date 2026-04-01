@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shark Trader Pro - AI Dashboard</title>
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Plotly via CDN -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="blob-bg"></div>
+    <div class="blob-bg blob-2"></div>
+    
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <i class="fa-solid fa-water"></i> <!-- Shark dorsal fin metaphor -->
+                <h2>SHARK<span>TRADER</span></h2>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="#"><i class="fa-solid fa-robot"></i> Algoritmo ML</a>
+                <a href="#"><i class="fa-solid fa-list-check"></i> Histórico</a>
+                <a href="#"><i class="fa-solid fa-sliders"></i> Ajustes</a>
+            </nav>
+
+            <div class="status-card">
+                <div class="server-status">
+                    <span class="dot" id="status-dot"></span>
+                    <span id="status-text">Conectando...</span>
+                </div>
+                <button id="toggle-bot" class="btn-primary">
+                    <i class="fa-solid fa-power-off"></i> Parar Robô
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div>
+                    <h1 class="page-title">Monitoramento Global</h1>
+                    <p class="subtitle">Analisando <span id="max-symbols">500</span> criptomoedas em tempo real via Binance/Bybit</p>
+                </div>
+                <div class="user-profile">
+                    <div class="pulse-ring"></div>
+                    <img src="https://ui-avatars.com/api/?name=Italo+Sousa&background=0D8ABC&color=fff" alt="User">
+                </div>
+            </header>
+
+            <!-- Metrics Grid -->
+            <section class="metrics-grid">
+                <div class="metric-card glass-panel">
+                    <div class="metric-icon blue"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="metric-info">
+                        <h3>Banca Atual (USDT)</h3>
+                        <h2 id="current-balance">$ 0.00</h2>
+                        <p class="metric-trend success" id="pnl-pct">+0.00%</p>
+                    </div>
+                </div>
+                
+                <div class="metric-card glass-panel">
+                    <div class="metric-icon purple"><i class="fa-solid fa-bullseye"></i></div>
+                    <div class="metric-info">
+                        <h3>Taxa de Acertos (Win Rate)</h3>
+                        <h2 id="win-rate">0%</h2>
+                        <p class="metric-trend neutral" id="total-trades">0 trades</p>
+                    </div>
+                </div>
+
+                <div class="metric-card glass-panel">
+                    <div class="metric-icon red"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                    <div class="metric-info">
+                        <h3>Drawdown Máximo</h3>
+                        <h2 id="max-drawdown">0.00%</h2>
+                        <p class="metric-trend danger">Risco atual</p>
+                    </div>
+                </div>
+
+                <div class="metric-card glass-panel">
+                    <div class="metric-icon green"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="metric-info">
+                        <h3>Melhor Trade</h3>
+                        <h2 id="best-trade">$ 0.00</h2>
+                        <p class="metric-trend success" id="worst-trade">Pior: $ 0.00</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="bottom-grid">
+                <!-- Chart Area -->
+                <section class="chart-section glass-panel">
+                    <div class="section-header">
+                        <h3><i class="fa-solid fa-chart-area"></i> Crescimento de Capital (Equity Curve)</h3>
+                    </div>
+                    <div id="plotly-chart" class="chart-container"></div>
+                </section>
+
+                <!-- Active Trades -->
+                <section class="active-trades-section glass-panel">
+                    <div class="section-header">
+                        <h3><i class="fa-solid fa-bolt"></i> Operações Abertas</h3>
+                    </div>
+                    <div class="trades-list" id="open-trades-container">
+                        <!-- Trades injectados via JS -->
+                        <div class="empty-state">Nenhuma operação aberta no momento... Aguardando sinal de ML.</div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- History section -->
+            <section class="history-section glass-panel mt-4">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-clock-rotate-left"></i> Últimos Fechamentos</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Ativo</th>
+                                <th>Tipo</th>
+                                <th>Entrada</th>
+                                <th>Saída</th>
+                                <th>Lucro (PnL)</th>
+                                <th>Tempo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
