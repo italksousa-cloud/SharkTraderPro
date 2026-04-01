@@ -25,9 +25,15 @@ COPY . .
 ENV TA_LIBRARY_PATH=/usr/lib
 ENV TA_INCLUDE_PATH=/usr/include
 
-# Install Python requirements
+# Pre-Install build dependencies
+RUN pip install --no-cache-dir "numpy<2" setuptools wheel Cython
+
+# Explicitly install TA-Lib without build isolation to use the global numpy headers
+RUN pip install --no-cache-dir --no-build-isolation TA-Lib==0.4.28
+
+# Install remaining Python requirements
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install flask flask-cors "numpy<2"
+RUN pip install flask flask-cors
 
 # Expose Web Dashboard Port
 EXPOSE 5000
