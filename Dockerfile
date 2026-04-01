@@ -21,6 +21,10 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
 # Copy all files
 COPY . .
 
+# Set environment variables for TA-Lib compilation
+ENV TA_LIBRARY_PATH=/usr/lib
+ENV TA_INCLUDE_PATH=/usr/include
+
 # Install Python requirements
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install flask flask-cors "numpy<2"
